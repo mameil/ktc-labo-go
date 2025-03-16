@@ -9,8 +9,9 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.New()
 
-	r.Use(gin.Recovery())      //이게 뭐야
-	r.Use(middleware.Logger()) //이게 뭐야
+	r.Use(gin.Recovery()) //이게 뭐야
+	//r.Use(middleware.Logger()) //이게 뭐야
+	r.Use(middleware.KonaLoggingMiddleware())
 
 	api := r.Group("/test") //이게 뭐야
 
