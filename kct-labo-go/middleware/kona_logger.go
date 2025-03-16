@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/gin-gonic/gin"
 	"io"
+	"kct-labo-go/kct-labo-go/utils"
 	"log"
 	"net/http"
 	"time"
@@ -19,9 +20,8 @@ func KonaLoggingMiddleware() gin.HandlerFunc {
 			requester = "CLIENT"
 		}
 
-		tid := c.GetHeader("X-Kona-Request-Time")
-		userId := c.GetHeader("X-Kona-Request-User")
-		mpaId := c.GetHeader("X-Kona-Request-Role")
+		//tid, userId, mpaId 를 로그에 출력하기 위해 설정
+		utils.SetLogContext(c)
 
 		var requestBody string
 		if c.Request.Body != nil {
@@ -32,11 +32,8 @@ func KonaLoggingMiddleware() gin.HandlerFunc {
 
 		//Request 을 로깅한다
 		//todo check kona common logging message format
-		log.Printf("[%s-REQ] T[%s] U[%s] M[%s] %s %s %s",
+		log.Printf("[%s-REQ] %s %s %s",
 			requester,
-			tid,
-			userId,
-			mpaId,
 			c.Request.Method,
 			c.Request.URL.String(),
 			requestBody,
@@ -58,6 +55,8 @@ func KonaLoggingMiddleware() gin.HandlerFunc {
 			duration.Milliseconds(),
 			loggingResponseWriter.body.String(),
 		)
+
+		utils.ClearLogContext(c)
 
 	}
 
