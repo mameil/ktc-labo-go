@@ -10,3 +10,7 @@ import (
 func GetPing(c *gin.Context) {
 	service.DoPing("3052731353", "16982698336781016760331400303886")
 }
+
+func GetPingError(c *gin.Context) {
+	service.MakeError()
+}

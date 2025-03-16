@@ -12,11 +12,13 @@ func SetupRouter() *gin.Engine {
 	r.Use(gin.Recovery()) //이게 뭐야
 	//r.Use(middleware.Logger()) //이게 뭐야
 	r.Use(middleware.KonaLoggingMiddleware())
+	r.Use(middleware.RecoverMiddleware()) // 패닉 핸들링 미들웨어 적용
 
 	api := r.Group("/test") //이게 뭐야
 
 	{
 		api.GET("/ping", controller.GetPing)
+		api.GET("/ping/error", controller.GetPingError)
 	}
 
 	return r

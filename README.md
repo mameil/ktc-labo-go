@@ -6,7 +6,7 @@
 
 ### TODO 공통으로 구현해야하는 항목들
 - [ ] Request / Response 로깅 > 완료
-- [ ] 에러 로깅
+- [ ] 에러 로깅 및 서버가 죽지 않도록 적용 > 완료
 - [ ] Graceful Shutdown >
 
 <br>

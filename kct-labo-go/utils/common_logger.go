@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"os"
+	"runtime/debug"
 	"sync"
 	"time"
 )
@@ -81,4 +82,11 @@ func (w customLogWriter) Write(p []byte) (n int, err error) {
 func InitLogger() {
 	log.SetFlags(0)                  // 기본 로그 포맷 제거
 	log.SetOutput(customLogWriter{}) // 모든 로그에 자동 Prefix 추가
+}
+
+// 에러 로그를 찍고 Stack Trace를 남기는 함수
+func LogError(err error) {
+	if err != nil {
+		log.Printf("ERROR: %s\n%s", err.Error(), debug.Stack())
+	}
 }
