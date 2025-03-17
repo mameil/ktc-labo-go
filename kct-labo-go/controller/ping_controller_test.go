@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/assert/v2"
+	"kct-labo-go/kct-labo-go/controller/dto"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -17,7 +20,10 @@ func TestGetPing(t *testing.T) {
 	r := gin.New()
 	r.GET("/test/ping", GetPing)
 
-	req, _ := http.NewRequest("GET", "/test/ping", nil)
+	userId := "3052731353"
+	mpaId := "16982698336781016760331400303886"
+
+	req, _ := http.NewRequest("GET", "/test/ping?userId=3052731353&mpaId=16982698336781016760331400303886", nil)
 	resp := httptest.NewRecorder()
 
 	r.ServeHTTP(resp, req)
@@ -27,4 +33,15 @@ func TestGetPing(t *testing.T) {
 	}
 
 	println(resp.Body.String())
+
+	assert.Equal(t, resp.Code, 200)
+
+	//여기서
+	//json.Unmarshal([]byte(resp.Body.String()), &responseGo)
+
+	var response dto.PongRequest
+	json.Unmarshal([]byte(resp.Body.String()), &response)
+
+	assert.Equal(t, response.UserId, userId)
+	assert.Equal(t, response.MpaId, mpaId)
 }

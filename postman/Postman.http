@@ -1,0 +1,6 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+### 샘플로 만든 api 의 응답을 봐보자
+GET localhost:4545/test/ping

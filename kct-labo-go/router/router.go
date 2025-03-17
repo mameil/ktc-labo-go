@@ -19,6 +19,7 @@ func SetupRouter() *gin.Engine {
 	{
 		api.GET("/ping", controller.GetPing)
 		api.GET("/ping/error", controller.GetPingError)
+		api.POST("/pong", controller.PostPong)
 	}
 
 	return r

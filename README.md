@@ -21,3 +21,21 @@ go mod init kct-labo-go
 go get github.com/gin-gonic/gin
 ```
 <br>
+
+### 프로젝트 구성
+http 요청 > router > middleware > controller > service <br>
+- controller
+  - url 요청에 따라서 필요한 서비스를 호출하는 곳
+- middleware
+  - 라우팅을 통과하기 전처리나 요청에 대한 응답 후처리를 수행하는 계층
+  - 현재 구현 사항
+    - 로깅처리
+- router
+  - 클라이언트의 HTTP 요청을 특정 url 경로에 연결된 핸들러 함수로 매핑해주는곳
+  - api 를 정리하고 미들웨어를 달아주는 곳
+- main
+  - 프로젝트를 구동시키기 위한 메인 클래스가 있는 곳
+- service
+  - 프로젝트에서 실제 비즈니스 로직이 수행되는 곳
+- utils
+  - 프로젝트에서 필요한 유틸성 클래스들을 포함한 곳

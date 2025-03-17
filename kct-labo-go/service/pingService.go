@@ -11,3 +11,7 @@ func DoPing(userId string, mpaId string) {
 func MakeError() {
 	panic("something went wrong.....")
 }
+
+func DoPong(userId string, mpaId string) {
+	log.Println("PONG!!!!")
+}
