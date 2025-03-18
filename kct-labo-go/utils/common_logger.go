@@ -28,10 +28,9 @@ func SetLogContext(c *gin.Context) {
 	logContextMap.Lock()
 	defer logContextMap.Unlock()
 	logContextMap.contexts[c] = LogContext{
-		//todo 각각의 header 가 뭔지 기존 ksl 라이브러리를 통해 확인 필요
-		T: c.GetHeader("T"),
-		U: c.GetHeader("U"),
-		M: c.GetHeader("M"),
+		T: c.GetHeader("X-KM-Correlation-ID"),
+		U: c.GetHeader("X-KM-UserId"),
+		M: c.GetHeader("X-KM-User-MpaId"),
 	}
 }
 

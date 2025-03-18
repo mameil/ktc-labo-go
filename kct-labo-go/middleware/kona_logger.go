@@ -14,8 +14,7 @@ func KonaLoggingMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		startTime := time.Now()
 
-		//todo check kona common header values
-		requester := c.GetHeader("X-Kona-Request-Id")
+		requester := c.GetHeader("X-KM-CALLER")
 		if requester == "" {
 			requester = "CLIENT"
 		}
@@ -31,7 +30,6 @@ func KonaLoggingMiddleware() gin.HandlerFunc {
 		}
 
 		//Request 을 로깅한다
-		//todo check kona common logging message format
 		log.Printf("[%s-REQ] %s %s %s",
 			requester,
 			c.Request.Method,
