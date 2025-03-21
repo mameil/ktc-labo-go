@@ -7,10 +7,21 @@ import (
 	"kct-labo-go/kct-labo-go/utils"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 func KonaLoggingMiddleware() gin.HandlerFunc {
+
+	// 로그 파일 열기
+	logFile, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("로그 파일을 열 수 없습니다: %v", err)
+	}
+
+	// Logger 설정 (파일 출력)
+	logger := log.New(logFile, "", log.LstdFlags)
+
 	return func(c *gin.Context) {
 		startTime := time.Now()
 
@@ -30,7 +41,7 @@ func KonaLoggingMiddleware() gin.HandlerFunc {
 		}
 
 		//Request 을 로깅한다
-		log.Printf("[%s-REQ] %s %s %s",
+		logger.Printf("[%s-REQ] %s %s %s",
 			requester,
 			c.Request.Method,
 			c.Request.URL.String(),
@@ -45,7 +56,7 @@ func KonaLoggingMiddleware() gin.HandlerFunc {
 
 		//Response 을 로깅한다
 		duration := time.Since(startTime) //소요시간 계산
-		log.Printf("[%s-RES] %s %s %d %dms %s",
+		logger.Printf("[%s-RES] %s %s %d %dms %s",
 			requester,
 			c.Request.Method,
 			c.Request.URL.String(),

@@ -4,33 +4,58 @@ import (
 	"github.com/gin-gonic/gin"
 	"kct-labo-go/kct-labo-go/controller/dto"
 	"kct-labo-go/kct-labo-go/service"
-	"kct-labo-go/kct-labo-go/utils"
 	"log"
+	"math/rand"
 	"net/http"
+	"os"
+	"time"
 )
+
+func generateRandomString(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	result := make([]byte, length)
+	for i := range result {
+		result[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(result)
+}
 
 // go 에서는 기본적으로 파일을 만들 때 snake case를 사용 >> 벌써 이상해
 // 타입명 / 함수명 / 필드명에 CamelCase를 사용
 func GetPing(c *gin.Context) {
-	//query param 을 가져오는 방법
-	userId := c.Query("userId")
-	mpaId := c.Query("mpaId")
 
-	//쿼리파람으로 들어온 값을 검증한다
-	if utils.IsNilOrEmpty(&userId) {
-		c.JSON(400, gin.H{"status": "400", "data": "userId is nil or empty"})
+	// 로그 파일 열기 (쓰기, 추가 모드)
+	logFile, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("로그 파일을 열 수 없습니다: %v", err)
 	}
-	if utils.IsNilOrEmpty(&mpaId) {
-		c.JSON(400, gin.H{"status": "400", "data": "mpaId is nil or empty"})
-	}
+	defer logFile.Close()
 
-	log.Printf("userId : %s, mpaId : %s", userId, mpaId)
+	// 로그 출력을 파일로 변경
+	log.SetOutput(logFile)
 
-	//서비스를 호출한다
-	service.DoPing(userId, mpaId)
+	ch := make(chan string)
 
-	//JSON 메소드는 gin 에서 제공하는 메소드로, http 응답코드 + 응답할 내용을리터한다
-	c.JSON(http.StatusOK, gin.H{"status": "200", "data": "success"})
+	// 비동기적으로 값을 채널에 전송
+	go func() {
+		ch <- "Hello World"
+
+		rand.Seed(time.Now().UnixNano()) // 랜덤 시드 설정
+
+		// 100자리 랜덤 문자열 생성 및 출력
+		randomString := generateRandomString(100)
+		log.Println(randomString)
+
+		time.Sleep(10 * time.Millisecond) // 10ms 동안 대기
+
+		close(ch)
+	}()
+
+	recv := <-ch
+	log.Println(recv)
+
+	// 채널에서 값을 읽고 응답 반환
+	c.JSON(http.StatusOK, gin.H{"message": recv})
 }
 
 func PostPong(c *gin.Context) {

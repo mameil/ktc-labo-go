@@ -4,8 +4,13 @@ import (
 	"log"
 )
 
-func DoPing(userId string, mpaId string) {
-	log.Println("PING!!!!")
+func DoPing() {
+	ch := make(chan string)
+	go func() {
+		ch <- "PING!!!!"
+		close(ch)
+	}()
+	log.Printf("%v", <-ch)
 }
 
 func MakeError() {
